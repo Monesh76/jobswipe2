@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-status
+  namespace: jobswipe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database-status
+  template:
+    metadata:
+      labels:
+        app: database-status
+    spec:
+      containers:
+      - name: database-status
+        image: postgres:14
+        command: ['sh', '-c', 'while true; do pg_isready -h $PROFILE_DB_HOST -p 5432; sleep 30; done']
+        env:
+        - name: PROFILE_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: database-credentials
+              key: PROFILE_DB_HOST

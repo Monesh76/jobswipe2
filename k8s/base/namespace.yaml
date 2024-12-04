@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jobswipe
+  labels:
+    name: jobswipe
+    environment: dev

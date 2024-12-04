@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jobswipe-config
+  namespace: jobswipe
+data:
+  API_URL: "http://api.jobswipe.local"
+  ENVIRONMENT: "dev"
+  LOG_LEVEL: "info"

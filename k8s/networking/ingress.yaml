@@ -1,0 +1,82 @@
+# k8s/networking/ingress.yaml
+
+# First, define the ALB IngressClass
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: alb
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  controller: ingress.k8s.aws/alb
+
+---
+# Then, define the Ingress resource with your routes
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobswipe-ingress
+  namespace: jobswipe
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/security-groups: ${SECURITY_GROUP_ID}
+spec:
+  # Specify the IngressClass name here instead of using the deprecated annotation
+  ingressClassName: alb
+  rules:
+  # API endpoints
+  - host: api.jobswipe.local
+    http:
+      paths:
+      - path: /api/profile
+        pathType: Prefix
+        backend:
+          service:
+            name: profile-service
+            port:
+              number: 80
+      - path: /api/match
+        pathType: Prefix
+        backend:
+          service:
+            name: match-service
+            port:
+              number: 80
+      - path: /api/chat
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-service
+            port:
+              number: 80
+      - path: /api/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /api/recommend
+        pathType: Prefix
+        backend:
+          service:
+            name: recommendation-service
+            port:
+              number: 80
+
+  # WebSocket endpoints
+  - host: ws.jobswipe.local
+    http:
+      paths:
+      - path: /chat
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-service
+            port:
+              number: 8081

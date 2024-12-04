@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+  namespace: jobswipe
+data:
+  PROFILE_DB_NAME: "profile_db"
+  PROFILE_DB_PORT: "5432"
+  MATCH_DB_NAME: "match_db"
+  MATCH_DB_PORT: "5432"
+  DB_MAX_CONNECTIONS: "20"
+  DB_IDLE_TIMEOUT: "300"

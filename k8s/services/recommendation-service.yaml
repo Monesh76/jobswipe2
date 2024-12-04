@@ -1,0 +1,74 @@
+# k8s/services/recommendation-service.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-service
+  namespace: jobswipe
+  labels:
+    app: recommendation-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: recommendation-service
+  template:
+    metadata:
+      labels:
+        app: recommendation-service
+    spec:
+      containers:
+      - name: recommendation-service
+        image: jobswipe/recommendation-service:latest  # You'll need to replace with your actual image
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: host
+        - name: MODEL_PATH
+          value: "/models/recommendation-model"
+        volumeMounts:
+        - name: model-storage
+          mountPath: "/models"
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-storage
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommendation-service
+  namespace: jobswipe
+spec:
+  selector:
+    app: recommendation-service
+  ports:
+  - port: 80
+    targetPort: http
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-storage
+  namespace: jobswipe
+spec:
+  storageClassName: jobswipe-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
