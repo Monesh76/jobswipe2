@@ -1,0 +1,19 @@
+# Core application dependencies
+Flask==2.3.3
+Flask-SQLAlchemy==3.1.1
+Flask-Cors==4.0.0
+psycopg2-binary==2.9.7
+python-dotenv==1.0.0
+gunicorn==21.2.0
+
+# Security and authentication
+PyJWT==2.8.0
+bcrypt==4.0.1
+
+# Monitoring and logging
+prometheus-flask-exporter==0.22.4
+structlog==23.1.0
+
+# Testing dependencies
+pytest==7.4.2
+pytest-cov==4.1.0
