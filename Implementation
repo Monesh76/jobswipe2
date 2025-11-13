@@ -164,31 +164,43 @@ INCIDENT_DATA=data_raw/sfpd_full_city.csv
 
 ## Progress Tracking
 
-### Completed ✅
-- [x] Environment setup and dependencies
-- [x] Sample SFPD data integration
-- [x] Small downtown SF graph (S1)
-- [x] Full SF graph builder (S2)
-- [x] Simple recency-based risk scoring
-- [x] FastAPI backend with geocoding
-- [x] Interactive web UI with place search
-- [x] Fastest vs Safest routing
-
-### In Progress 🔄
-- [ ] Hotspot detection (K-Means/DBSCAN) - S3
-- [ ] Temporal conditioning (hour/day bins) - S3
-- [ ] Incident type weighting - S3
-- [ ] Balanced route algorithm - S4
-- [ ] Time budget and safety margin constraints - S4
-
-### Upcoming 📋
-- [ ] Risk classifier training (XGBoost/LogReg) - S4
-- [ ] Plain-language explanations - S5
-- [ ] High-risk segment alerts - S5
-- [ ] User preference UI - S6
-- [ ] Evaluation framework (50 O-D pairs) - S7
+| Task | Status (Nov 2025) | Notes |
+|------|-------------------|-------|
+| **Environment Setup & Dependencies** | Completed | Python 3.11 environment active; virtualenv configured; all geospatial libraries installed and tested |
+| **Sample SFPD Data Integration** | Completed | Downtown sample (~13k rows) integrated; data schema validated; CSV processing pipeline operational |
+| **Small Downtown SF Graph (S1)** | Completed | 2×2 km subgraph built with 399 nodes, 845 edges; OSMnx caching functional; basic routing demo working |
+| **Full SF Graph Builder (S2)** | Completed | Full-city graph with 10,020 nodes and 27,464 edges; GraphML cached; ~5-10 min build time verified |
+| **Full-City SFPD Data Fetch** | Completed | 365-day historical data (~400k incidents) fetched and cleaned; schema documented with timestamp |
+| **Simple Recency-Based Risk Scoring** | Completed | Exponential decay model implemented; edge risk scores computed; Parquet storage functional |
+| **Incident→Edge Attribution** | Completed | Spatial indexing with Rtree operational; buffer/nearest-edge snapping working; per-edge incident counts generated |
+| **FastAPI Backend with Geocoding** | Completed | RESTful API endpoints operational; Nominatim geocoding integrated; CORS configured for local dev |
+| **Interactive Web UI** | Completed | Leaflet.js map with place search; autocomplete functional; mobile-responsive design implemented |
+| **Fastest vs Safest Routing** | Completed | Two-route comparison working; Δtime/Δrisk displayed; route visualization on map functional |
+| **Static & Interactive Visualizations** | Completed | Matplotlib PNG plots and Folium HTML maps generated; route rendering verified |
+| **Hotspot Detection (K-Means/DBSCAN)** | In Progress | Evaluating clustering algorithms for crime hotspot identification; proximity features in development |
+| **Temporal Conditioning (Hour/Day)** | In Progress | Implementing time-of-day and day-of-week binning; recency decay weighting being refined |
+| **Incident Type Weighting** | In Progress | Categorizing incidents (theft, assault, etc.); developing severity weights for risk scoring |
+| **Feature Engineering Pipeline** | In Progress | Building edge_features.parquet with hotspot proximity, temporal bins, and incident weights |
+| **Risk Classifier Training (ML)** | Planned | To be implemented in S4; evaluating XGBoost vs Logistic Regression for normalized risk scores [0,1] |
+| **Balanced Route Algorithm** | Planned | Composite cost w=α·time+β·risk to be implemented; α=0.5, β=0.5 for balanced option |
+| **Time Budget Constraint** | Planned | User-defined max detour (Tmax) enforcement; constraint: travel_time ≤ Tmax |
+| **Safety Margin Constraint** | Planned | Minimum safety threshold enforcement; constraint: user_threshold − route_risk > 0 |
+| **3-Route API Endpoint** | Planned | FastAPI endpoint to return Fastest/Balanced/Safest with time and risk totals; scheduled for S4 |
+| **Plain-Language Explanations** | Planned | Rule-based explanation generator; e.g., "avoids blocks with 3 recent theft reports"; scheduled for S5 |
+| **High-Risk Segment Alerts** | Planned | Alert system for paths crossing newly high-risk segments; threshold-based detection; scheduled for S5 |
+| **User Preference UI** | Planned | Time budget and safety threshold sliders; preference controls in web UI; scheduled for S6 |
+| **3-Route Comparison View** | Planned | Enhanced UI displaying Fastest/Balanced/Safest with clear deltas; scheduled for S6 |
+| **Risk Overlay Toggle** | Planned | Interactive map layer showing segment-level risk; toggle control in UI; scheduled for S6 |
+| **Evaluation Framework (50 O-D Pairs)** | Planned | Batch evaluation script; metrics: % risk reduction, minutes per 10% risk reduction; scheduled for S7 |
+| **Latency Benchmarking** | Planned | Performance testing to verify ≤5s P95 target; scheduled for S7 |
+| **Robustness & Error Handling** | Planned | Cached fallbacks, graceful degradation, comprehensive error handling; scheduled for S8 |
+| **Data Refresh Pipeline** | Planned | End-to-end refresh script with versioning; `make refresh` command; scheduled for S9 |
+| **Operations & Monitoring** | Planned | Request timing, error logging, metrics dashboard, runbook; scheduled for S10 |
+| **POI Density Feature (Optional)** | Planned | OSM points-of-interest integration to distinguish isolated vs busy corridors; stretch goal for S11 |
+| **Final Evaluation & Metrics** | Planned | Complete metrics collection, final plots, demo script; scheduled for S12-S13 |
 
 ---
 
 **Last Updated:** November 12, 2025  
-**Current Sprint:** S2 (Data & Graph Baseline)
+**Current Sprint:** S2 (Data & Graph Baseline)  
+**Next Sprint:** S3 (Risk Features v1) - Starting Sep 30, 2025
